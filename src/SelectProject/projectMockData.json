@@ -1,0 +1,36 @@
+[
+  { "id": "P001", "title": "SharePoint Framework - SPFx Development", "team": [], "status": 10, "hasChildren": true, "clientCategory": "Internal", "workingAction": "Dev", "items": 5, "dueDate": "2023-12-31" },
+  { "id": "P005", "title": "Launch HHHH PXC Management", "team": ["avatar1", "avatar2", "+2"], "status": 10, "hasChildren": true, "clientCategory": "Client A", "workingAction": "Management", "items": 12, "dueDate": "2024-01-15", "children": [
+    { "id": "P005-X1", "title": "Service PXs", "team": [], "status": 10, "clientCategory": "Client A", "workingAction": "Service", "items": 2, "dueDate": "2023-11-20" },
+    { "id": "P005-X3", "title": "Task Working Date Assignments", "team": ["avatar1", "avatar2", "avatar3"], "status": 10, "clientCategory": "Client A", "workingAction": "Task", "items": 8, "dueDate": "2023-11-25" },
+    { "id": "P005-X2", "title": "Setup PXC System", "team": ["avatar1", "avatar2", "+2"], "status": 10, "hasChildren": true, "clientCategory": "Client A", "workingAction": "Setup", "items": 4, "dueDate": "2023-12-01", "children": [
+      { "id": "P005-X2-C1", "title": "PXC Profile Page - Development", "team": ["avatar1", "avatar2", "+2"], "status": 10, "clientCategory": "Client A", "workingAction": "Dev", "items": 1, "dueDate": "2023-12-05" },
+      { "id": "P005-X2-C2", "title": "PXC Edit Popup - Development", "team": ["avatar1", "avatar2", "avatar3"], "status": 10, "clientCategory": "Client A", "workingAction": "Dev", "items": 1, "dueDate": "2023-12-10" }
+    ]}
+  ]},
+  { "id": "P002", "title": "Create SmartActions", "team": ["avatar1", "avatar2", "avatar3"], "status": 90, "hasChildren": false, "clientCategory": "Internal", "workingAction": "Dev", "items": 3, "dueDate": "2023-10-15" },
+  { "id": "P003", "title": "Create Mailweaver Tool", "team": ["avatar1", "avatar2", "+2"], "status": 90, "hasChildren": false, "clientCategory": "Internal", "workingAction": "Dev", "items": 7, "dueDate": "2023-11-01" },
+  { "id": "P004", "title": "Improve Digital Administration", "team": ["avatar1", "avatar2"], "status": 90, "hasChildren": false, "clientCategory": "Admin", "workingAction": "Improve", "items": 2, "dueDate": "2023-12-20" },
+  { "id": "P006", "title": "Design", "team": ["avatar1", "avatar2"], "status": 10, "hasChildren": false, "clientCategory": "Design", "workingAction": "Design", "items": 10, "dueDate": "2024-02-01" },
+  { "id": "P007", "title": "Steering Report 2022-12", "team": ["avatar1", "avatar2", "+2"], "status": 99, "hasChildren": false, "clientCategory": "Report", "workingAction": "Report", "items": 1, "dueDate": "2022-12-31" },
+  { "id": "P008", "title": "Improve E+E Project Management", "team": ["avatar1", "avatar2", "+4"], "status": 90, "hasChildren": false, "clientCategory": "Management", "workingAction": "Improve", "items": 4, "dueDate": "2023-09-30" },
+  { "id": "P009", "title": "MS Teams Integration with SharePoint", "team": ["avatar1", "avatar2"], "status": 10, "hasChildren": true, "clientCategory": "Internal", "workingAction": "Integration", "items": 6, "dueDate": "2024-03-15" },
+  { "id": "P010", "title": "Create Human Resource Management", "team": ["avatar1", "avatar2", "+3"], "status": 10, "hasChildren": false, "clientCategory": "HR", "workingAction": "Create", "items": 15, "dueDate": "2024-06-01" },
+  { "id": "P011", "title": "Create Shareweb Help", "team": ["avatar1", "avatar2", "+3"], "status": 90, "hasChildren": false, "clientCategory": "Support", "workingAction": "Create", "items": 20, "dueDate": "2023-11-15" },
+  { "id": "P012", "title": "HHHH Site Provisioning Automation", "team": ["avatar1"], "status": 0, "hasChildren": false, "clientCategory": "Automation", "workingAction": "Create", "items": 1, "dueDate": "2024-01-01" },
+  { "id": "P013", "title": "Improve HHHH Website", "team": ["avatar1", "avatar2", "avatar3"], "status": 90, "hasChildren": false, "clientCategory": "Web", "workingAction": "Improve", "items": 5, "dueDate": "2023-12-15" },
+  { "id": "P014", "title": "Improve Component Portfolio Structure and Create Architecture Tool", "team": ["avatar1"], "status": 10, "hasChildren": true, "clientCategory": "Arch", "workingAction": "Improve", "items": 3, "dueDate": "2024-04-01" },
+  { "id": "P015", "title": "Shareweb Future - LivingDocs", "team": ["avatar1", "avatar2", "+3"], "status": 90, "hasChildren": false, "clientCategory": "Future", "workingAction": "Dev", "items": 8, "dueDate": "2024-05-15" },
+  { "id": "P016", "title": "Improve Content SmartVerification Tool", "team": ["avatar1", "avatar2", "+3"], "status": 90, "hasChildren": false, "clientCategory": "Content", "workingAction": "Improve", "items": 4, "dueDate": "2023-10-30" },
+  { "id": "P017", "title": "Improve Timesheet Tool", "team": ["avatar1"], "status": 10, "hasChildren": true, "clientCategory": "Internal", "workingAction": "Improve", "items": 2, "dueDate": "2023-11-30" },
+  { "id": "P018", "title": "Improve UI and Flow of Key Tools", "team": ["avatar1", "avatar2", "+3"], "status": 0, "hasChildren": false, "clientCategory": "UI", "workingAction": "Improve", "items": 10, "dueDate": "2024-02-15" },
+  { "id": "P019", "title": "SDC Shareweb Developments and Maintenance", "team": ["avatar1", "avatar2", "avatar3"], "status": 90, "hasChildren": true, "clientCategory": "SDC", "workingAction": "Maint", "items": 25, "dueDate": "2024-12-31" },
+  { "id": "P020", "title": "SDC Contact Management Processes", "team": ["avatar1", "avatar2", "+2"], "status": 90, "hasChildren": false, "clientCategory": "SDC", "workingAction": "Process", "items": 3, "dueDate": "2023-12-01" },
+  { "id": "P021", "title": "Create Shareweb Task Management and Feedback Processes", "team": ["avatar1", "avatar2", "+3"], "status": 90, "hasChildren": false, "clientCategory": "Process", "workingAction": "Create", "items": 5, "dueDate": "2024-01-30" },
+  { "id": "P024", "title": "Create Design Guide", "team": ["avatar1", "avatar2", "avatar3"], "status": 10, "hasChildren": true, "clientCategory": "Design", "workingAction": "Create", "items": 1, "dueDate": "2023-11-01" },
+  { "id": "P027", "title": "Create Monthly Reporting", "team": ["avatar1", "avatar2", "+2"], "status": 90, "hasChildren": false, "clientCategory": "Report", "workingAction": "Create", "items": 1, "dueDate": "2023-10-31" },
+  { "id": "P029", "title": "Improve Contact Overview", "team": ["avatar1", "avatar2", "avatar3"], "status": 0, "hasChildren": false, "clientCategory": "Contact", "workingAction": "Improve", "items": 2, "dueDate": "2023-11-15" },
+  { "id": "P030", "title": "SharePoint Framework - SPFx Issues and Bug fixing", "team": ["avatar1", "avatar2", "+3"], "status": 10, "hasChildren": true, "clientCategory": "Internal", "workingAction": "Fix", "items": 15, "dueDate": "2024-03-31" },
+  { "id": "P031", "title": "Development of qliksense Data Processing", "team": ["avatar1", "avatar2", "+2"], "status": 90, "hasChildren": false, "clientCategory": "Data", "workingAction": "Dev", "items": 4, "dueDate": "2023-12-15" },
+  { "id": "P033", "title": "Improvements for Steering Report 2023-06", "team": ["avatar1", "avatar2", "avatar3"], "status": 99, "hasChildren": false, "clientCategory": "Report", "workingAction": "Improve", "items": 1, "dueDate": "2023-06-30" }
+]

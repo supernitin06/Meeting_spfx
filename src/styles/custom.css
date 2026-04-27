@@ -1,0 +1,72 @@
+/********* SPFX OVERRIDE CSS   *********/
+ 
+.CanvasComponent.LCS,
+.CanvasComponent.LCS .CanvasZone,
+.CanvasComponent.LCS .CanvasZone--alignment,
+.CanvasComponent.LCS .Canvas,
+.CanvasComponent.LCS .ControlZone,
+.CanvasComponent.LCS .CanvasSection,
+.CanvasComponent.LCS .CanvasLayout {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+}
+ 
+/* --- Remove the SharePoint inner padding that keeps content boxed --- */
+div[data-automation-id="CanvasZone"] {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+ 
+/* --- Center your web part content --- */
+#workbenchPageContent,
+.CanvasZone,
+.ControlZone {
+  justify-content: center !important;
+  align-items: flex-start !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+ 
+/* --- Fix top offset issue in Workbench --- */
+#workbenchPageContent {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  position: relative;
+  top: 0 !important;
+}
+ 
+/* --- Optional: remove extra canvas chrome for full width view --- */
+.CanvasZone--alignment,
+.CanvasZone--section,
+.CanvasSection {
+  max-width: 100% !important;
+}
+ 
+/* --- Hide SharePoint chrome (optional for full app look) --- */
+#spSiteHeader,
+#spCommandBar,
+.CanvasZone--header,
+.sp-appBar,
+div#spTopPlaceholder {
+  display: none !important;
+}
+ 
+ 
+.CanvasZoneSectionContainer[data-automation-id='CanvasZone-SectionContainer'] {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 0 !important;
+}
+ 
+ 
+.CanvasSection[data-automation-id="CanvasSection"] {
+  padding: 0;
+}
+ 
