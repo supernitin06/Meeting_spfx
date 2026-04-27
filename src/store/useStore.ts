@@ -66,77 +66,7 @@ export const useStore = create<StoreState>((set, get) => ({
   fetchMeetings: async () => {
     try {
       const spMeetings = await MeetingService.getMeetings();
-      const mappedMeetings: Meeting[] = spMeetings.map(spm => {
-        // Build local datetime strings (no trailing "Z") so Today/Upcoming/Past
-        // comparisons match the viewer's local timezone.
-        const startDateTime =
-          spm.startDate && spm.startTime
-            ? `${spm.startDate}T${spm.startTime}:00`
-            : new Date().toISOString();
-        const endDateTime =
-          spm.endDate && spm.endTime
-            ? `${spm.endDate}T${spm.endTime}:00`
-            : new Date().toISOString();
-
-        const agendaItemsFromLookup = (() => {
-          if (!spm.agenda) return [];
-          // Support single lookup object OR multi-lookup array
-          if (Array.isArray(spm.agenda)) {
-            return spm.agenda
-              .filter(Boolean)
-              .map((a: any) => ({
-                id: String(a.Id ?? a.id ?? ''),
-                text: a.Title ?? a.title ?? 'Agenda',
-                subItems: []
-              }))
-              .filter((a: any) => a.id);
-          }
-          return [
-            {
-              id: String(spm.agenda.Id ?? spm.agenda.id ?? ''),
-              text: spm.agenda.Title ?? spm.agenda.title ?? 'Agenda',
-              subItems: []
-            }
-          ].filter((a) => a.id);
-        })();
-
-        const storeUsers = get().users;
-        const participants = (spm.participants || []).map((p: any) => {
-          const id = p.Id?.toString();
-          const existing = storeUsers.find((u) => u.id === id);
-          return {
-            user: {
-              id,
-              name: existing?.name || p.Title || 'Unknown',
-              email: existing?.email || ''
-            },
-            role: 'Participant' as const
-          };
-        });
-
-        return {
-          id: spm.id,
-          title: spm.title,
-          type: (spm.meetingType as any) || 'Internal',
-          visibility: (spm.visibility as any) || 'Personal',
-          startDateTime,
-          endDateTime,
-          participants,
-          participantUids: participants.map((pp) => pp.user.id),
-          project: spm.linkedProject ? { id: spm.linkedProject.Id?.toString(), name: spm.linkedProject.Title } : { id: '', name: 'No Project' },
-          description: spm.description || '',
-          agendaItems: agendaItemsFromLookup,
-          status: 'Scheduled', // or map if we have it
-          category: spm.format as any,
-          platform: spm.platform as any,
-          meetingLink: spm.meetingLink,
-          timeZone: spm.timeZone,
-          createdBy: { id: '0', name: 'System', email: '' },
-          aiProcessed: false,
-          location: ''
-        };
-      });
-      set({ meetings: mappedMeetings });
+      set({ meetings: spMeetings });
     } catch (err) {
       console.error("Error fetching meetings:", err);
     }

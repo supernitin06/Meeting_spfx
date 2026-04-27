@@ -23,7 +23,8 @@ export default function MyMeetings() {
       try {
         setLoading(true);
         const data = await MeetingService.getMeetings();
-        setMeetings(data as Meeting[]);
+        setMeetings(data);
+        console.log("meetings ", data);
         setError(null);
       } catch (err) {
         console.error('Error fetching meetings:', err);
@@ -88,21 +89,41 @@ export default function MyMeetings() {
       .filter((user: any) => user && user.id !== undefined && user.id !== null);
   };
 
-  const myMeetings = meetings.filter((m) => {
-    if (!currentUser) return false;
+  const myMeetings = useMemo(() => {
+    if (!currentUser) return meetings;
 
     const currentUserId = String(currentUser.id);
-    const creatorId = m.createdBy?.id != null ? String(m.createdBy.id) : null;
-    const hasCurrentUserInParticipants = getMeetingParticipantUsers(m).some(
-      (user: any) => String(user.id) === currentUserId
-    );
+    const currentUserEmail = (currentUser.email || '').toLowerCase();
+    const currentUserName = (currentUser.name || '').toLowerCase();
 
-    return (
-      m.visibility === 'Global' ||
-      hasCurrentUserInParticipants ||
-      creatorId === currentUserId
-    );
-  });
+    const scopedMeetings = meetings.filter((m) => {
+      const creatorId = m.createdBy?.id != null ? String(m.createdBy.id) : null;
+      const creatorEmail = (m.createdBy?.email || '').toLowerCase();
+      const creatorName = (m.createdBy?.name || '').toLowerCase();
+
+      const hasCurrentUserInParticipants = getMeetingParticipantUsers(m).some((user: any) => {
+        const participantId = user?.id != null ? String(user.id) : '';
+        const participantEmail = (user?.email || '').toLowerCase();
+        const participantName = (user?.name || '').toLowerCase();
+
+        return (
+          participantId === currentUserId ||
+          (!!currentUserEmail && participantEmail === currentUserEmail) ||
+          (!!currentUserName && participantName === currentUserName)
+        );
+      });
+
+      const isCreator =
+        creatorId === currentUserId ||
+        (!!currentUserEmail && creatorEmail === currentUserEmail) ||
+        (!!currentUserName && creatorName === currentUserName);
+
+      return m.visibility === 'Global' || hasCurrentUserInParticipants || isCreator;
+    });
+
+    // Fallback: if user matching data is inconsistent across lists, still show meetings.
+    return scopedMeetings.length > 0 ? scopedMeetings : meetings;
+  }, [meetings, currentUser]);
 
   const filteredMeetings = useMemo(() => {
     let result = [...myMeetings];
@@ -171,6 +192,17 @@ export default function MyMeetings() {
   const todaysMeetings = filteredMeetings.filter(m => isToday(new Date(m.startDateTime)));
   const upcomingMeetings = filteredMeetings.filter(m => isAfter(new Date(m.startDateTime), now) && !isToday(new Date(m.startDateTime)));
   const pastMeetings = filteredMeetings.filter(m => isBefore(new Date(m.startDateTime), now) && !isToday(new Date(m.startDateTime)));
+
+  useEffect(() => {
+    if (activeTab !== 'Today' || todaysMeetings.length > 0) return;
+    if (upcomingMeetings.length > 0) {
+      setActiveTab('Upcoming');
+      return;
+    }
+    if (pastMeetings.length > 0) {
+      setActiveTab('Past');
+    }
+  }, [activeTab, todaysMeetings.length, upcomingMeetings.length, pastMeetings.length]);
 
   const displayedMeetings = activeTab === 'Today' ? todaysMeetings : activeTab === 'Upcoming' ? upcomingMeetings : pastMeetings;
 

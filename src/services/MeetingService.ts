@@ -1,4 +1,5 @@
 import { getSP } from "../config/pnpconfig";
+import { Meeting, MeetingRole } from "../types";
 
 export interface MeetingPayload {
   Title: string;
@@ -58,27 +59,19 @@ export class MeetingService {
     return null;
   }
 
-  public static async getMeetings(): Promise<
-    Array<{
-      id: string;
-      title: string;
-      meetingType?: string;
-      visibility?: string;
-      startDate?: string | null;
-      startTime?: string | null;
-      endDate?: string | null;
-      endTime?: string | null;
-      timeZone?: string;
-      description?: string;
-      format?: string;
-      platform?: string;
-      meetingLink?: string;
-      location?: string;
-      agenda?: any;
-      linkedProject?: any;
-      participants?: any[];
-    }>
-  > {
+  private static toArray<T>(value: T | T[] | null | undefined): T[] {
+    if (!value) return [];
+    return Array.isArray(value) ? value : [value];
+  }
+
+  private static toLocalIso(dateOnly?: string | null, timeOnly?: string | null): string {
+    if (!dateOnly && !timeOnly) return new Date().toISOString();
+    const safeDate = dateOnly || new Date().toISOString().slice(0, 10);
+    const safeTime = (timeOnly || "00:00").slice(0, 5);
+    return `${safeDate}T${safeTime}:00`;
+  }
+
+  public static async getMeetings(): Promise<Meeting[]> {
     const sp = getSP();
     const items = await sp.web.lists.getByTitle(MeetingService.LIST_NAME).items
       .select(
@@ -103,25 +96,56 @@ export class MeetingService {
         "Participants/Title"
       )
       .expand("Agenda", "LinkedProject", "Participants")();
-      
-    return items.map(item => ({
-      id: item.Id.toString(),
-      title: item.Title,
-      meetingType: item.MeetingType,
-      visibility: item.Visibility,
-      startDate: MeetingService.coerceDateOnly(item.StartDate),
-      startTime: MeetingService.coerceTime(item.StartTime),
-      endDate: MeetingService.coerceDateOnly(item.EndDate),
-      endTime: MeetingService.coerceTime(item.EndTime),
-      timeZone: item.TimeZone,
-      description: item.Description,
-      format: item.Format,
-      platform: item.Platform,
-      meetingLink: item.MeetingLink,
-      agenda: item.Agenda,
-      linkedProject: item.LinkedProject,
-      participants: item.Participants ? (Array.isArray(item.Participants) ? item.Participants : [item.Participants]) : []
-    }));
+
+    return items.map((item): Meeting => {
+      const startDate = MeetingService.coerceDateOnly(item.StartDate);
+      const startTime = MeetingService.coerceTime(item.StartTime);
+      const endDate = MeetingService.coerceDateOnly(item.EndDate);
+      const endTime = MeetingService.coerceTime(item.EndTime);
+
+      const participants = MeetingService.toArray<any>(item.Participants).map((participant) => ({
+        user: {
+          id: String(participant?.Id ?? ""),
+          name: participant?.Title || "Unknown",
+          email: ""
+        },
+        role: "Participant" as MeetingRole
+      }));
+
+      const agendaItems = MeetingService.toArray<any>(item.Agenda)
+        .filter((agenda) => agenda?.Id != null)
+        .map((agenda) => ({
+          id: String(agenda.Id),
+          text: agenda?.Title || "Agenda",
+          subItems: []
+        }));
+
+      const linkedProject = item.LinkedProject;
+
+      return {
+        id: String(item.Id),
+        title: item.Title || "Untitled Meeting",
+        type: item.MeetingType || "Internal",
+        visibility: item.Visibility || "Personal",
+        startDateTime: MeetingService.toLocalIso(startDate, startTime),
+        endDateTime: MeetingService.toLocalIso(endDate, endTime),
+        participants,
+        participantUids: participants.map((p) => p.user.id),
+        project: linkedProject
+          ? { id: String(linkedProject.Id), name: linkedProject.Title || "Untitled Project" }
+          : { id: "", name: "No Project" },
+        description: item.Description || "",
+        agendaItems,
+        status: "Scheduled",
+        createdBy: { id: "0", name: "System", email: "" },
+        aiProcessed: false,
+        category: item.Format || "Online",
+        platform: item.Platform || "Microsoft Teams",
+        meetingLink: item.MeetingLink || "",
+        location: item.Platform || "",
+        timeZone: item.TimeZone || "UTC"
+      };
+    });
   }
 
   public static async addMeeting(meeting: MeetingPayload): Promise<any> {
