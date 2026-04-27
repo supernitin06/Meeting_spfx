@@ -214,7 +214,7 @@ export const useStore = create<StoreState>((set, get) => ({
           }
         }
 
-        if (agendaIds.length > 0) payload.AgendaId = { results: agendaIds };
+        if (agendaIds.length > 0) payload.AgendaId = agendaIds;
       }
 
       if (Object.keys(payload).length > 0) {

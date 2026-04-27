@@ -271,8 +271,8 @@ export default function MeetingModal() {
           ? location
           : null,
 
-      // SharePoint multi-lookup expects `{ results: number[] }`
-      AgendaId: agendaIds.length > 0 ? { results: agendaIds } : null,
+      // With PnP items.add, multi-lookup values should be plain number arrays
+      AgendaId: agendaIds.length > 0 ? agendaIds : null,
       ParticipantsId: participantIds
     };
 

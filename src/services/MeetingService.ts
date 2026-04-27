@@ -12,7 +12,7 @@ export interface MeetingPayload {
   TimeZone?: string;
   ParticipantsId?: number[]; // Assuming multi-lookup or single-lookup
   Description?: string;
-  AgendaId?: number | { results: number[] }; // Lookup to Agenda (supports multi-lookup)
+  AgendaId?: number | number[]; // Lookup to Agenda (single or multi)
   Format?: string;
   Platform?: string;
   MeetingLink?: string;

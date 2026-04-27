@@ -81,9 +81,28 @@ export default function MyMeetings() {
 
   const goToToday = () => setReferenceDate(new Date());
 
-  const myMeetings = meetings.filter(m => 
-    currentUser && (m.visibility === 'Global' || m.participants.some(p => p.user.id === currentUser.id) || m.createdBy.id === currentUser.id)
-  );
+  const getMeetingParticipantUsers = (meeting: Meeting) => {
+    const participants = Array.isArray(meeting.participants) ? meeting.participants : [];
+    return participants
+      .map((participant: any) => participant?.user ?? participant)
+      .filter((user: any) => user && user.id !== undefined && user.id !== null);
+  };
+
+  const myMeetings = meetings.filter((m) => {
+    if (!currentUser) return false;
+
+    const currentUserId = String(currentUser.id);
+    const creatorId = m.createdBy?.id != null ? String(m.createdBy.id) : null;
+    const hasCurrentUserInParticipants = getMeetingParticipantUsers(m).some(
+      (user: any) => String(user.id) === currentUserId
+    );
+
+    return (
+      m.visibility === 'Global' ||
+      hasCurrentUserInParticipants ||
+      creatorId === currentUserId
+    );
+  });
 
   const filteredMeetings = useMemo(() => {
     let result = [...myMeetings];
@@ -210,18 +229,22 @@ export default function MyMeetings() {
       case 'status':
         return <span className="text-sm text-[var(--TextBlack)] font-medium">{meeting.status}</span>;
       case 'participants':
-        return (
+        {
+          const participantUsers = getMeetingParticipantUsers(meeting);
+          const visibleParticipants = participantUsers.slice(0, 3);
+          return (
           <div className="flex -space-x-2">
-            {meeting.participants.slice(0, 3).map((p, i) => (
-              <img key={p.user.id} src={p.user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.user.name)}&background=2F5596&color=fff`} alt={p.user.name} className="avatar-img border-2 border-white shadow-sm" style={{ zIndex: 3 - i }} />
+            {visibleParticipants.map((user: any, i) => (
+              <img key={String(user.id)} src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'User')}&background=2F5596&color=fff`} alt={user.name || 'User'} className="avatar-img border-2 border-white shadow-sm" style={{ zIndex: 3 - i }} />
             ))}
-            {meeting.participants.length > 3 && (
+            {participantUsers.length > 3 && (
               <div className="w-6 h-6 rounded-full border-2 border-white bg-[var(--SuccessGreen)] flex items-center justify-center text-[10px] font-bold text-white z-0 shadow-sm">
-                +{meeting.participants.length - 3}
+                +{participantUsers.length - 3}
               </div>
             )}
           </div>
         );
+        }
       default:
         return null;
     }
@@ -531,6 +554,7 @@ export default function MyMeetings() {
 
   const MeetingCard = ({ meeting, featured = false }: { meeting: Meeting, featured?: boolean }) => {
     const duration = differenceInMinutes(new Date(meeting.endDateTime), new Date(meeting.startDateTime));
+    const participantUsers = getMeetingParticipantUsers(meeting);
     
     return (
       <Link 
@@ -561,7 +585,7 @@ export default function MyMeetings() {
                 {meeting.title}
               </h3>
             </div>
-            <img src={meeting.participants[0]?.user.avatar || 'https://i.pravatar.cc/150'} alt="" className="avatar-img shrink-0 ml-3" />
+            <img src={participantUsers[0]?.avatar || 'https://i.pravatar.cc/150'} alt="" className="avatar-img shrink-0 ml-3" />
           </div>
 
           {/* Description Snippet */}
@@ -597,12 +621,12 @@ export default function MyMeetings() {
 
           <div className="mt-auto flex items-center justify-between pt-4 border-t border-[var(--BorderGrey)]">
             <div className="flex -space-x-1.5">
-              {meeting.participants.slice(0, 3).map((p, i) => (
-                <img key={p.user.id} src={p.user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.user.name)}&background=2F5596&color=fff`} alt={p.user.name} className="w-6 h-6 rounded-full border-2 border-white shadow-sm" style={{ zIndex: 3 - i }} />
+              {participantUsers.slice(0, 3).map((user: any, i) => (
+                <img key={String(user.id)} src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'User')}&background=2F5596&color=fff`} alt={user.name || 'User'} className="w-6 h-6 rounded-full border-2 border-white shadow-sm" style={{ zIndex: 3 - i }} />
               ))}
-              {meeting.participants.length > 3 && (
+              {participantUsers.length > 3 && (
                 <div className="w-6 h-6 rounded-full border-2 border-white bg-[var(--LightBgGrey)] flex items-center justify-center text-[8px] font-bold text-[var(--TextBlack)] z-0 shadow-sm">
-                  +{meeting.participants.length - 3}
+                  +{participantUsers.length - 3}
                 </div>
               )}
             </div>
