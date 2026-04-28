@@ -2,12 +2,40 @@ import { useState, useMemo, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { format, isToday, isAfter, isBefore, startOfWeek, addDays, isSameDay, startOfMonth, endOfMonth, endOfWeek, isSameMonth, addMonths, subMonths, differenceInMinutes, subDays, startOfDay, endOfDay, eachHourOfInterval, isWithinInterval } from 'date-fns';
 import { Link } from 'react-router-dom';
-import { Search, FileText, Calendar, Clock, Edit3, LayoutGrid, List, CalendarDays, ChevronLeft, ChevronRight, MapPin, ListChecks, X } from 'lucide-react';
+import { Search, FileText, Calendar, Clock, Edit3, LayoutGrid, List, CalendarDays, MapPin, ListChecks, X, Filter, RotateCcw } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Meeting } from '../types';
 import { SmartTable } from '../GlobalCommonTable/Table/SmartTable';
 import { ColumnSetting, TableSettings } from '../GlobalCommonTable/Table/TableTypes';
 import { MeetingService } from '../services/MeetingService';
+
+type MeetingTab = 'All' | 'Today' | 'Upcoming' | 'Past';
+
+interface AdvancedMeetingFilters {
+  project: string;
+  participantIds: string[];
+  status: string;
+  meetingType: string;
+  visibility: string;
+  format: string;
+  platform: string;
+  dateFrom: string;
+  dateTo: string;
+}
+
+interface AiMeetingFilterResponse {
+  tab?: MeetingTab | string;
+  searchTerm?: string;
+  project?: string;
+  participantIds?: Array<string | number>;
+  status?: string;
+  meetingType?: string;
+  visibility?: string;
+  format?: string;
+  platform?: string;
+  dateFrom?: string;
+  dateTo?: string;
+}
 
 export default function MyMeetings() {
   const currentUser = useStore(state => state.currentUser);
@@ -37,11 +65,22 @@ export default function MyMeetings() {
     fetchMeetingsData();
   }, []);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeTab, setActiveTab] = useState<'Today' | 'Upcoming' | 'Past'>('Today');
+  const [activeTab, setActiveTab] = useState<MeetingTab>('Today');
   const [viewMode, setViewMode] = useState<'card' | 'table' | 'calendar'>('card');
   const [referenceDate, setReferenceDate] = useState(new Date());
   const [calendarViewType, setCalendarViewType] = useState<'month' | 'week' | 'day'>('month');
   const [selectedDayForMore, setSelectedDayForMore] = useState<Date | null>(null);
+  const [advancedFilters, setAdvancedFilters] = useState<AdvancedMeetingFilters>({
+    project: '',
+    participantIds: [],
+    status: '',
+    meetingType: '',
+    visibility: '',
+    format: '',
+    platform: '',
+    dateFrom: '',
+    dateTo: ''
+  });
 
   // SmartTable State
   const initialColumns: ColumnSetting[] = [
@@ -125,6 +164,112 @@ export default function MyMeetings() {
     return scopedMeetings.length > 0 ? scopedMeetings : meetings;
   }, [meetings, currentUser]);
 
+  const participantOptions = useMemo(() => {
+    const map = new Map<string, { id: string; name: string }>();
+    myMeetings.forEach((meeting) => {
+      getMeetingParticipantUsers(meeting).forEach((user: any) => {
+        const id = user?.id != null ? String(user.id) : '';
+        if (!id) return;
+        if (!map.has(id)) {
+          map.set(id, { id, name: user?.name || user?.Title || `User ${id}` });
+        }
+      });
+    });
+    return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [myMeetings]);
+
+  const projectOptions = useMemo(
+    () => Array.from(new Set(myMeetings.map((m) => m.project?.name || '').filter(Boolean))).sort(),
+    [myMeetings]
+  );
+
+  const statusOptions = useMemo(
+    () => Array.from(new Set(myMeetings.map((m) => m.status).filter(Boolean))).sort(),
+    [myMeetings]
+  );
+
+  const meetingTypeOptions = useMemo(
+    () => Array.from(new Set(myMeetings.map((m) => m.type).filter(Boolean))).sort(),
+    [myMeetings]
+  );
+
+  const visibilityOptions = useMemo(
+    () => Array.from(new Set(myMeetings.map((m) => m.visibility).filter(Boolean))).sort(),
+    [myMeetings]
+  );
+
+  const formatOptions = useMemo(
+    () => Array.from(new Set(myMeetings.map((m) => m.category).filter(Boolean))).sort(),
+    [myMeetings]
+  );
+
+  const platformOptions = useMemo(
+    () => Array.from(new Set(myMeetings.map((m) => m.platform).filter(Boolean))).sort(),
+    [myMeetings]
+  );
+
+  const hasAdvancedFilters = useMemo(
+    () =>
+      !!advancedFilters.project ||
+      advancedFilters.participantIds.length > 0 ||
+      !!advancedFilters.status ||
+      !!advancedFilters.meetingType ||
+      !!advancedFilters.visibility ||
+      !!advancedFilters.format ||
+      !!advancedFilters.platform ||
+      !!advancedFilters.dateFrom ||
+      !!advancedFilters.dateTo,
+    [advancedFilters]
+  );
+
+  const applyAiFilters = (payload: unknown) => {
+    try {
+      const data: AiMeetingFilterResponse =
+        typeof payload === 'string' ? JSON.parse(payload) : (payload as AiMeetingFilterResponse);
+      if (!data || typeof data !== 'object') return;
+
+      if (typeof data.searchTerm === 'string') {
+        setSearchTerm(data.searchTerm);
+      }
+
+      setAdvancedFilters((prev) => ({
+        ...prev,
+        project: data.project ?? prev.project,
+        participantIds: Array.isArray(data.participantIds)
+          ? data.participantIds.map((id) => String(id))
+          : prev.participantIds,
+        status: data.status ?? prev.status,
+        meetingType: data.meetingType ?? prev.meetingType,
+        visibility: data.visibility ?? prev.visibility,
+        format: data.format ?? prev.format,
+        platform: data.platform ?? prev.platform,
+        dateFrom: data.dateFrom ?? prev.dateFrom,
+        dateTo: data.dateTo ?? prev.dateTo
+      }));
+
+      if (data.tab && ['All', 'Today', 'Upcoming', 'Past'].includes(data.tab)) {
+        setActiveTab(data.tab as MeetingTab);
+      }
+    } catch (aiErr) {
+      console.error('Invalid AI filter payload:', aiErr);
+    }
+  };
+
+  useEffect(() => {
+    const eventHandler = (event: Event) => {
+      const customEvent = event as CustomEvent;
+      applyAiFilters(customEvent.detail);
+    };
+
+    window.addEventListener('mymeetings:apply-ai-filter', eventHandler);
+    (window as any).applyMyMeetingsAIFilters = applyAiFilters;
+
+    return () => {
+      window.removeEventListener('mymeetings:apply-ai-filter', eventHandler);
+      delete (window as any).applyMyMeetingsAIFilters;
+    };
+  }, []);
+
   const filteredMeetings = useMemo(() => {
     let result = [...myMeetings];
 
@@ -148,6 +293,59 @@ export default function MyMeetings() {
           const words = query.split(' ').filter(Boolean);
           return words.some(word => valuesToSearch.some(v => v.toLowerCase().includes(word)));
         }
+      });
+    }
+
+    // Advanced Filters
+    if (advancedFilters.project) {
+      const projectLower = advancedFilters.project.toLowerCase();
+      result = result.filter((m) => (m.project?.name || '').toLowerCase().includes(projectLower));
+    }
+
+    if (advancedFilters.participantIds.length > 0) {
+      const selectedParticipants = new Set(advancedFilters.participantIds);
+      result = result.filter((m) => {
+        const userIds = getMeetingParticipantUsers(m).map((u: any) => String(u.id));
+        return userIds.some((id: string) => selectedParticipants.has(id));
+      });
+    }
+
+    if (advancedFilters.status) {
+      const statusLower = advancedFilters.status.toLowerCase();
+      result = result.filter((m) => (m.status || '').toLowerCase() === statusLower);
+    }
+
+    if (advancedFilters.meetingType) {
+      const typeLower = advancedFilters.meetingType.toLowerCase();
+      result = result.filter((m) => (m.type || '').toLowerCase() === typeLower);
+    }
+
+    if (advancedFilters.visibility) {
+      const visibilityLower = advancedFilters.visibility.toLowerCase();
+      result = result.filter((m) => (m.visibility || '').toLowerCase() === visibilityLower);
+    }
+
+    if (advancedFilters.format) {
+      const formatLower = advancedFilters.format.toLowerCase();
+      result = result.filter((m) => (m.category || '').toLowerCase() === formatLower);
+    }
+
+    if (advancedFilters.platform) {
+      const platformLower = advancedFilters.platform.toLowerCase();
+      result = result.filter((m) => (m.platform || '').toLowerCase() === platformLower);
+    }
+
+    if (advancedFilters.dateFrom || advancedFilters.dateTo) {
+      const from = advancedFilters.dateFrom ? startOfDay(new Date(advancedFilters.dateFrom)) : null;
+      const to = advancedFilters.dateTo ? endOfDay(new Date(advancedFilters.dateTo)) : null;
+      result = result.filter((m) => {
+        const meetingStart = new Date(m.startDateTime);
+        if (from && to) {
+          return isWithinInterval(meetingStart, { start: from, end: to });
+        }
+        if (from) return meetingStart >= from;
+        if (to) return meetingStart <= to;
+        return true;
       });
     }
 
@@ -185,7 +383,7 @@ export default function MyMeetings() {
     }
 
     return result;
-  }, [myMeetings, searchTerm, searchType, searchFields, filters, sortKey, sortDirection]);
+  }, [myMeetings, searchTerm, searchType, searchFields, filters, sortKey, sortDirection, advancedFilters]);
 
   const now = new Date();
   
@@ -204,7 +402,8 @@ export default function MyMeetings() {
     }
   }, [activeTab, todaysMeetings.length, upcomingMeetings.length, pastMeetings.length]);
 
-  const displayedMeetings = activeTab === 'Today' ? todaysMeetings : activeTab === 'Upcoming' ? upcomingMeetings : pastMeetings;
+  const displayedMeetings =
+    activeTab === 'All' ? filteredMeetings : activeTab === 'Today' ? todaysMeetings : activeTab === 'Upcoming' ? upcomingMeetings : pastMeetings;
 
   const handleToggleSelect = (id: string) => {
     const newSelected = new Set(selectedIds);
@@ -233,6 +432,20 @@ export default function MyMeetings() {
 
   const handleFilterChange = (key: string, val: string) => {
     setFilters(prev => ({ ...prev, [key]: val }));
+  };
+
+  const clearAdvancedFilters = () => {
+    setAdvancedFilters({
+      project: '',
+      participantIds: [],
+      status: '',
+      meetingType: '',
+      visibility: '',
+      format: '',
+      platform: '',
+      dateFrom: '',
+      dateTo: ''
+    });
   };
 
   const renderCell = (meeting: Meeting, column: ColumnSetting) => {
@@ -706,6 +919,137 @@ export default function MyMeetings() {
             </div>
           </header>
 
+          <div className="bg-[var(--LightBgGrey)] border border-[var(--BorderGrey)] rounded-lg p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-[var(--TextBlack)]">
+                <Filter size={16} />
+                <span className="text-sm font-semibold">Filter bar</span>
+                {hasAdvancedFilters && (
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 text-[var(--SiteBlue)] font-semibold">
+                    Active
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={clearAdvancedFilters}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--SiteBlue)] hover:underline"
+              >
+                <RotateCcw size={12} />
+                Reset filters
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+              <input
+                type="text"
+                placeholder="Project"
+                value={advancedFilters.project}
+                onChange={(e) => setAdvancedFilters((prev) => ({ ...prev, project: e.target.value }))}
+                list="mymeeting-project-options"
+                className="px-3 py-2 text-sm border border-[var(--BorderGrey)] rounded-sm bg-white outline-none"
+              />
+              <datalist id="mymeeting-project-options">
+                {projectOptions.map((project) => (
+                  <option key={project} value={project} />
+                ))}
+              </datalist>
+
+              <select
+                value={advancedFilters.status}
+                onChange={(e) => setAdvancedFilters((prev) => ({ ...prev, status: e.target.value }))}
+                className="px-3 py-2 text-sm border border-[var(--BorderGrey)] rounded-sm bg-white outline-none"
+              >
+                <option value="">All Status</option>
+                {statusOptions.map((status) => (
+                  <option key={status} value={status}>{status}</option>
+                ))}
+              </select>
+
+              <select
+                value={advancedFilters.meetingType}
+                onChange={(e) => setAdvancedFilters((prev) => ({ ...prev, meetingType: e.target.value }))}
+                className="px-3 py-2 text-sm border border-[var(--BorderGrey)] rounded-sm bg-white outline-none"
+              >
+                <option value="">All Meeting Types</option>
+                {meetingTypeOptions.map((type) => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+
+              <select
+                value={advancedFilters.visibility}
+                onChange={(e) => setAdvancedFilters((prev) => ({ ...prev, visibility: e.target.value }))}
+                className="px-3 py-2 text-sm border border-[var(--BorderGrey)] rounded-sm bg-white outline-none"
+              >
+                <option value="">All Visibility</option>
+                {visibilityOptions.map((visibility) => (
+                  <option key={visibility} value={visibility}>{visibility}</option>
+                ))}
+              </select>
+
+              <select
+                value={advancedFilters.format}
+                onChange={(e) => setAdvancedFilters((prev) => ({ ...prev, format: e.target.value }))}
+                className="px-3 py-2 text-sm border border-[var(--BorderGrey)] rounded-sm bg-white outline-none"
+              >
+                <option value="">All Formats</option>
+                {formatOptions.map((formatOption) => (
+                  <option key={formatOption} value={formatOption}>{formatOption}</option>
+                ))}
+              </select>
+
+              <select
+                value={advancedFilters.platform}
+                onChange={(e) => setAdvancedFilters((prev) => ({ ...prev, platform: e.target.value }))}
+                className="px-3 py-2 text-sm border border-[var(--BorderGrey)] rounded-sm bg-white outline-none"
+              >
+                <option value="">All Platforms</option>
+                {platformOptions.map((platform) => (
+                  <option key={platform} value={platform}>{platform}</option>
+                ))}
+              </select>
+
+              <input
+                type="date"
+                value={advancedFilters.dateFrom}
+                onChange={(e) => setAdvancedFilters((prev) => ({ ...prev, dateFrom: e.target.value }))}
+                className="px-3 py-2 text-sm border border-[var(--BorderGrey)] rounded-sm bg-white outline-none"
+              />
+
+              <input
+                type="date"
+                value={advancedFilters.dateTo}
+                onChange={(e) => setAdvancedFilters((prev) => ({ ...prev, dateTo: e.target.value }))}
+                className="px-3 py-2 text-sm border border-[var(--BorderGrey)] rounded-sm bg-white outline-none"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <select
+                multiple
+                value={advancedFilters.participantIds}
+                onChange={(e) =>
+                  setAdvancedFilters((prev) => ({
+                    ...prev,
+                    participantIds: Array.from(e.target.selectedOptions).map((opt) => opt.value)
+                  }))
+                }
+                className="min-h-[96px] px-3 py-2 text-sm border border-[var(--BorderGrey)] rounded-sm bg-white outline-none"
+              >
+                {participantOptions.map((participant) => (
+                  <option key={participant.id} value={participant.id}>
+                    {participant.name}
+                  </option>
+                ))}
+              </select>
+              <div className="text-xs text-[var(--DisabledGrey)] flex items-center">
+                Hold Cmd/Ctrl to select multiple participants.
+                <br />
+                AI auto-fill supported via `window.applyMyMeetingsAIFilters(payload)` or `mymeetings:apply-ai-filter` custom event.
+              </div>
+            </div>
+          </div>
+
           {/* Error State */}
           {error && (
             <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
@@ -726,6 +1070,13 @@ export default function MyMeetings() {
               <>
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 border-b border-[var(--BorderGrey)] pb-3">
                   <div className={clsx("flex items-center gap-8", viewMode === 'calendar' && "invisible")}>
+                    <button 
+                      onClick={() => setActiveTab('All')}
+                      className={clsx("text-xl font-normal transition-colors relative p-0", activeTab === 'All' ? "text-[var(--SiteBlue)]" : "text-[var(--DisabledGrey)] hover:text-[var(--TextBlack)]")}
+                    >
+                      All meetings ({filteredMeetings.length})
+                      {activeTab === 'All' && <span className="absolute -bottom-[12px] left-0 right-0 h-1 bg-[var(--SiteBlue)] rounded-t-full" />}
+                    </button>
                     <button 
                       onClick={() => setActiveTab('Today')}
                       className={clsx("text-xl font-normal transition-colors relative p-0", activeTab === 'Today' ? "text-[var(--SiteBlue)]" : "text-[var(--DisabledGrey)] hover:text-[var(--TextBlack)]")}
