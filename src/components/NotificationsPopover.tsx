@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { Bell, Check, Circle, ExternalLink } from 'lucide-react';
 import { useStore } from '../store/useStore';

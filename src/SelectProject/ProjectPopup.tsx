@@ -1,18 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
-  X, 
-  Search, 
-  Settings, 
-  ChevronRight, 
-  ChevronDown, 
-  MoreHorizontal, 
-  FileText, 
-  FileSpreadsheet, 
-  Brush, 
-  Printer, 
-  ChevronUp,
-  Users,
-  ExternalLink
+  X
 } from 'lucide-react';
 import { SmartTable } from '../GlobalCommonTable/Table/SmartTable';
 import { ColumnSetting, TableSettings } from '../GlobalCommonTable/Table/TableTypes';
@@ -75,15 +63,13 @@ export function ProjectPopup({
   data: propsData
 }: ProjectPopupProps) {
   const [data, setData] = useState<any[]>([]);
-  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+  const [expandedRows] = useState<Record<string, boolean>>({});
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isSingleSelect, setIsSingleSelect] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchMode, setSearchMode] = useState('All Words');
   const [selectedSearchFields, setSelectedSearchFields] = useState<string[]>([]);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'asc' | 'desc' } | null>(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isCreateSprintOpen, setIsCreateSprintOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<any | null>(null);
   const [popupData, setPopupData] = useState<{ users: string[], position: { top: number, left: number } } | null>(null);
@@ -191,11 +177,7 @@ export function ProjectPopup({
     return result;
   };
 
-  const toggleSearchField = (field: string) => {
-    setSelectedSearchFields(prev => 
-      prev.includes(field) ? prev.filter(f => f !== field) : [...prev, field]
-    );
-  };
+
 
   const handlePrint = () => {
     const headers = ['ID', 'Title', 'Client Category', 'Team', 'Working Action', 'Status', 'Iter', 'Due Date'];
@@ -347,12 +329,7 @@ export function ProjectPopup({
 
   const flattenedFilteredData = useMemo(() => flattenData(filteredData), [filteredData, expandedRows]);
 
-  const toggleRow = (id: string) => {
-    setExpandedRows(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
-  };
+
 
   const toggleSelection = (id: string) => {
     if (isSingleSelect) {

@@ -1,7 +1,8 @@
+import React from 'react';
 import { useState } from 'react';
 import { useStore } from '../store/useStore';
 import { format } from 'date-fns';
-import { Check, X, Edit2, Calendar, Briefcase, User as UserIcon, CheckSquare, Plus } from 'lucide-react';
+import { Check, X, Edit2, Calendar, Briefcase, User as UserIcon, Plus } from 'lucide-react';
 import { clsx } from 'clsx';
 import CreateTaskModal from '../components/CreateTaskModal';
 import EditActionItemModal from '../components/EditActionItemModal';
@@ -86,13 +87,8 @@ export default function ActionItems() {
     setSelectedItems(newSelection);
   };
 
-  const toggleAll = () => {
-    if (selectedItems.size === pendingItems.length) {
-      setSelectedItems(new Set());
-    } else {
-      setSelectedItems(new Set(pendingItems.map(i => i.id)));
-    }
-  };
+
+
 
   const handleBulkApprove = () => {
     selectedItems.forEach(id => handleApprove(id));

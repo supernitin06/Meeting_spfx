@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Play, Loader2 } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 import { ActionItem } from '../types';
 import { useStore } from '../store/useStore';
 import { SearchInput } from '../SelectProject/SearchInput';
@@ -11,21 +11,6 @@ interface CreateTaskModalProps {
   onCreate: (taskId: string) => void;
 }
 
-const websitesSP = [
-  { id: 'da', label: 'ALAKDigital', text: 'DA', color: 'bg-[#6b7280]' },
-  { id: 'de', label: 'DE', text: 'DE', color: 'bg-[#6b7280]', textColor: 'text-green-400' },
-  { id: 'edu', label: 'Education', icon: 'building', color: 'bg-[#6b7280]' },
-  { id: 'ei', label: 'EI', text: 'e+i', color: 'bg-[#6b7280]' },
-  { id: 'eps', label: 'EPS', text: 'EPS', color: 'bg-[#6b7280]', textColor: 'text-red-500', bgInner: 'bg-white' },
-  { id: 'gruene', label: 'Gruene', icon: 'gruene', color: 'bg-[#1f2937]' },
-  { id: 'hhhh', label: 'HHHH', text: 'HHHH', color: 'bg-[#3b82f6]' },
-  { id: 'ilf', label: 'ILF', icon: 'ilf', color: 'bg-[#3b82f6]' },
-  { id: 'kb', label: 'KathaBeck', text: 'KB', color: 'bg-[#6b7280]', textColor: 'text-green-400' },
-  { id: 'mig', label: 'Migration', icon: 'migration', color: 'bg-[#6b7280]' },
-  { id: 'share', label: 'Shareweb', icon: 'share', color: 'bg-[#6b7280]' },
-  { id: 'small', label: 'Small Projects', icon: 'small', color: 'bg-[#6b7280]' },
-  { id: 'smart', label: 'SmartAdmin', text: 'SM', color: 'bg-[#1f2937]', textColor: 'text-teal-400' },
-];
 
 export default function CreateTaskModal({ isOpen, onClose, actionItem, onCreate }: CreateTaskModalProps) {
   const [title, setTitle] = useState('');

@@ -1,8 +1,9 @@
+import * as React from 'react';
 import { useState, useMemo } from 'react';
 import { useStore } from '../store/useStore';
 import { format, isToday, isAfter, isBefore, startOfWeek, addDays, isSameDay, startOfMonth, endOfMonth, endOfWeek, isSameMonth, addMonths, subMonths, differenceInMinutes, subDays, startOfDay, endOfDay, eachHourOfInterval } from 'date-fns';
 import { Link } from 'react-router-dom';
-import { Search, FileText, LayoutGrid, List, CalendarDays, Calendar, Clock, MapPin, ListChecks, X, Database, File } from 'lucide-react';
+import { Search, FileText, LayoutGrid, List, CalendarDays, Calendar, Clock, MapPin, ListChecks, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Meeting } from '../types';
 import { SmartTable } from '../GlobalCommonTable/Table/SmartTable';
@@ -10,7 +11,6 @@ import { ColumnSetting, TableSettings } from '../GlobalCommonTable/Table/TableTy
 
 export default function Overview() {
   const meetings = useStore(state => state.meetings);
-  const currentUser = useStore(state => state.currentUser);
   const openMeetingModal = useStore(state => state.openMeetingModal);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState<'Today' | 'Upcoming' | 'Past'>('Today');

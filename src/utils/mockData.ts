@@ -1,4 +1,4 @@
-import { User, Meeting, ActionItem, Project, Notification, MeetingType, MeetingVisibility, MeetingStatus, ActionItemStatus, ActionItemSource, MeetingRole } from '../types';
+import { User, Meeting, ActionItem, Project, Notification, MeetingType, MeetingVisibility, MeetingStatus, ActionItemSource, MeetingRole } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 export const generateMockData = () => {

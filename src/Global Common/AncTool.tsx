@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { DefaultButton, PrimaryButton, Dropdown, IDropdownOption } from '@fluentui/react';
-import { SlArrowRight, SlArrowDown } from 'react-icons/sl';
+import { Dropdown, IDropdownOption } from '@fluentui/react';
 import {
   FilePlus,
   Mail,
@@ -8,21 +7,7 @@ import {
   Edit2,
   Folder,
   FileText,
-  Bold,
-  Italic,
-  Underline,
   Eraser,
-  List,
-  ListOrdered,
-  Palette,
-  Type,
-  Table,
-  Image,
-  Undo,
-  Redo,
-  Eye,
-  Code,
-  Info,
   FileSpreadsheet,
   Presentation,
   Clipboard,
@@ -44,7 +29,7 @@ const globalCommon = {
   devSuccess: (msg: string) => console.log('Success:', msg),
   SendTeamMessages: async (msg: string, context: any) => console.log('Teams Message Sent:', msg),
 };
-const Tooltip = ({ children, text }: any) => <div title={text}>{children}</div>;
+
 const PageLoader = ({ active }: { active: boolean }) => active ? (
   <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
     <div className="bg-white p-6 rounded-xl shadow-xl flex flex-col items-center gap-4">
@@ -53,7 +38,7 @@ const PageLoader = ({ active }: { active: boolean }) => active ? (
     </div>
   </div>
 ) : null;
-const DynamicAlert = ({ message, type }: any) => <div className={`p-4 mb-4 text-sm rounded-lg ${type === 'danger' ? 'bg-red-50 text-red-800' : type === 'success' ? 'bg-green-50 text-green-800' : 'bg-blue-50 text-blue-800'}`}>{message}</div>;
+
 
 // --- INTERFACES ---
 export interface IAncToolProps {
@@ -87,15 +72,15 @@ const sanitizeFileName = (fileName: string) => {
 };
 
 export const AncTool: React.FC<IAncToolProps> = (props) => {
-  const { item, Context, siteUrl, listName, SmartMetadataListID } = props;
-  const userCtx = useContext(UserContext);
+  const { item } = props;
+
   const myCtx = useContext(myContextValue);
   const { addFileToMeeting, removeFileFromMeeting, meetings, updateMeeting, setActivePreviewFile } = useStore();
   const currentMeeting = meetings.find(m => m.id === item?.id);
 
   // --- STATE ---
   const [pageLoaderActive, setPageLoaderActive] = useState<boolean>(false);
-  const [ExistingFiles, setExistingFiles] = useState<ISharePointFile[]>([]);
+
   const [currentFolderFiles, setCurrentFolderFiles] = useState<ISharePointFile[]>([]);
   const [searchArrays, setSearchArrays] = useState<{ existing: string, current: string }>({ existing: '', current: '' });
   const [SelectedItem, setSelectedItem] = useState<ISharePointFile | null>(null);
@@ -104,7 +89,7 @@ export const AncTool: React.FC<IAncToolProps> = (props) => {
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
   const [activeSubTab, setActiveSubTab] = useState<'UPLOAD' | 'DRAG_DROP' | 'LINK_TO'>('UPLOAD');
   const [uploadSearchText, setUploadSearchText] = useState<string>('');
-  const [uploadRenameText, setUploadRenameText] = useState<string>('');
+
   const [uploadRank, setUploadRank] = useState<number>(5);
   const [isManageModalOpen, setIsManageModalOpen] = useState<boolean>(false);
   const [isRenameModalOpen, setIsRenameModalOpen] = useState<boolean>(false);
@@ -117,7 +102,7 @@ export const AncTool: React.FC<IAncToolProps> = (props) => {
   const [renamedFileName, setRenamedFileName] = useState<string>('');
   const [externalLinkUrl, setExternalLinkUrl] = useState<string>('');
   const [externalLinkName, setExternalLinkName] = useState<string>('');
-  const [selectedRank, setSelectedRank] = useState<number>(0);
+
 
   const [uploadQueue, setUploadQueue] = useState<File[]>([]);
   const [targetFolderPath, setTargetFolderPath] = useState<string>('');
@@ -141,7 +126,7 @@ export const AncTool: React.FC<IAncToolProps> = (props) => {
       }));
       const allFiles = [...mappedFiles, ...tempFiles];
       setCurrentFolderFiles(allFiles);
-      setExistingFiles(allFiles);
+
       if (props.onFilesUpdated) {
         props.onFilesUpdated(allFiles);
       }
@@ -172,12 +157,7 @@ export const AncTool: React.FC<IAncToolProps> = (props) => {
     queueFilesForUpload(files);
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const files = Array.from(e.target.files);
-      queueFilesForUpload(files);
-    }
-  };
+
 
   const queueFilesForUpload = (files: File[]) => {
     setUploadQueue(prev => [...prev, ...files]);
@@ -255,7 +235,7 @@ export const AncTool: React.FC<IAncToolProps> = (props) => {
         setTempFiles(prev => prev.filter(f => f.Id !== file.Id));
       } else {
         // Find the file metadata in the meeting to get the storagePath
-        const fileMetadata = currentMeeting.files?.find(f => f.id === String(file.Id));
+
         
         // Local storage simulation doesn't need explicit storage deletion
         // but we would handle it here if there was a real backend.

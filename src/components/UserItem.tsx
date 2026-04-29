@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { UserData } from '../utils/groupUsers';
 
 interface UserItemProps {
@@ -8,9 +8,9 @@ interface UserItemProps {
 export function UserItem({ user }: UserItemProps) {
   return (
     <div className="flex items-center py-2 border-b border-[var(--BorderGrey)] last:border-0">
-      <img 
-        src={user["Item Image"] || "https://picsum.photos/seed/user/28/28"} 
-        alt={user.Title} 
+      <img
+        src={user["Item Image"] || "https://picsum.photos/seed/user/28/28"}
+        alt={user.Title}
         className="avatar-img"
         referrerPolicy="no-referrer"
       />

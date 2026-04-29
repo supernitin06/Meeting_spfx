@@ -26,7 +26,7 @@ module.exports = {
     },
     // Custom variable-based colors
     {
-      pattern: /(bg|text|border)-\[var\(--.*\)]/,
+      pattern: /(bg|text|border)-\[var\(--.*\)\]/,
       variants: ['hover', 'focus', 'active'],
     },
     // Layout utilities

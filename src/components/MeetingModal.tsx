@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { MeetingType, MeetingVisibility, User, Project, AgendaItem, MeetingCategory, MeetingPlatform } from '../types';
-import { Calendar, Clock, MapPin, Users, Briefcase, FileText, Globe, Link as LinkIcon, ChevronDown, Check, X as CloseIcon, Plus, Loader2, Eye, Sparkles } from 'lucide-react';
+import { Calendar, Clock, MapPin, FileText, Globe, Link as LinkIcon, ChevronDown, X as CloseIcon, Plus, Loader2, Eye, Sparkles } from 'lucide-react';
 import { MeetingService } from '../services/MeetingService';
 import { AgendaService } from '../services/AgendaService';
 import { PeoplePicker } from '../Global Common/PeoplePicker';
@@ -27,13 +27,10 @@ export default function MeetingModal() {
     closeMeetingModal,
     editingMeetingId,
     meetings,
-    addMeeting,
     updateMeeting,
-    addNotification,
     currentUser,
     users,
     teams,
-    projects
   } = useStore();
 
   const now = new Date();
@@ -398,13 +395,7 @@ export default function MeetingModal() {
     }
   };
 
-  const toggleParticipant = (user: User) => {
-    if (selectedParticipants.find(p => p.id === user.id)) {
-      setSelectedParticipants(selectedParticipants.filter(p => p.id !== user.id));
-    } else {
-      setSelectedParticipants([...selectedParticipants, user]);
-    }
-  };
+
 
   return (
     <div

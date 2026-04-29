@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import clsx from 'clsx';
-import { X, Menu, Calendar, Edit2, Plus, Trash2, Search, UserPlus, ExternalLink, History, Share2, Save, ChevronUp, ChevronRight } from 'lucide-react';
+import { X, Menu, Calendar, Edit2, Plus, Trash2, Search, ExternalLink, Share2, ChevronUp, ChevronRight } from 'lucide-react';
 
 interface TeamMember {
   id: string;

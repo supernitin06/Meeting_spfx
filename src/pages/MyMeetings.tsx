@@ -1,8 +1,9 @@
+import * as React from 'react';
 import { useState, useMemo, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { format, isToday, isAfter, isBefore, startOfWeek, addDays, isSameDay, startOfMonth, endOfMonth, endOfWeek, isSameMonth, addMonths, subMonths, differenceInMinutes, subDays, startOfDay, endOfDay, eachHourOfInterval, isWithinInterval } from 'date-fns';
 import { Link } from 'react-router-dom';
-import { Search, FileText, Calendar, Clock, Edit3, LayoutGrid, List, CalendarDays, MapPin, ListChecks, X, Filter, RotateCcw } from 'lucide-react';
+import { Search, FileText, Calendar, Clock, LayoutGrid, List, CalendarDays, MapPin, ListChecks, X, Filter, RotateCcw } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Meeting } from '../types';
 import { SmartTable } from '../GlobalCommonTable/Table/SmartTable';
@@ -659,8 +660,7 @@ export default function MyMeetings() {
                   {format(hour, 'HH:mm')}
                 </div>
                 {weekDays.map((day) => {
-                  const dayHourStart = new Date(day.setHours(hour.getHours(), 0, 0, 0));
-                  const dayHourEnd = new Date(day.setHours(hour.getHours() + 1, 0, 0, 0));
+
                   const hourMeetings = myMeetings.filter(m => {
                     const start = new Date(m.startDateTime);
                     return isSameDay(start, day) && start.getHours() === hour.getHours();
@@ -970,7 +970,7 @@ export default function MyMeetings() {
                 onChange={(e) => setAdvancedFilters((prev) => ({ ...prev, meetingType: e.target.value }))}
                 className="px-3 py-2 text-sm border border-[var(--BorderGrey)] rounded-sm bg-white outline-none"
               >
-                <option value="">All Meeting Types</option>
+                <option value="">All Meetingwww Types</option>
                 {meetingTypeOptions.map((type) => (
                   <option key={type} value={type}>{type}</option>
                 ))}

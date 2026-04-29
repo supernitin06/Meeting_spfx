@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { ActionItem, User } from '../types';
+import { ActionItem } from '../types';
 import { useStore } from '../store/useStore';
 
 interface EditActionItemModalProps {

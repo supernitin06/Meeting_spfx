@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Download, Save, FileText, File as FileIcon, Image as ImageIcon, Loader2, Edit3, AlertCircle } from 'lucide-react';
+import { X, Download, Save, FileText, Image as ImageIcon, Loader2, Edit3, AlertCircle } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import RichTextEditor from './RichTextEditor';
 

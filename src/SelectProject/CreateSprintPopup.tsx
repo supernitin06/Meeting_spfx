@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { X, Info, Edit2 } from 'lucide-react';
 
 interface CreateSprintPopupProps {
@@ -45,7 +45,7 @@ export function CreateSprintPopup({ onClose }: CreateSprintPopupProps) {
                   Define a new sprint for your project.
                 </p>
               </div>
-              
+
               <div className="space-y-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-[var(--DisabledGrey)] uppercase tracking-wider">Title</label>

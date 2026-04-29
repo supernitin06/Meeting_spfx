@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Modal from './CentralizedModal';
-import { TableSettings, ColumnSetting } from './TableTypes';
+import { TableSettings } from './TableTypes';
 
 interface DefaultSettingsModalProps {
   isOpen: boolean;

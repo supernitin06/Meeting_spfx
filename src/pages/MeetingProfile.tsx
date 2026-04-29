@@ -1,8 +1,9 @@
-import { useState, useMemo, useRef, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
-import { format, differenceInMilliseconds } from 'date-fns';
-import { Calendar, Clock, MapPin, Users, Briefcase, FileText, Upload, CheckSquare, File, ChevronLeft, Sparkles, AlertCircle, MessageSquare, LayoutGrid, LogIn, LogOut, Plus, Link as LinkIcon, ChevronDown, Edit2, Trash2, X, GripVertical, Copy, Loader2, Globe, Check, User as UserIcon, Eye } from 'lucide-react';
+import { format} from 'date-fns';
+import { Calendar, Clock, MapPin, Users, Briefcase, FileText, Upload, CheckSquare, File, ChevronLeft, Sparkles, AlertCircle, LayoutGrid, LogIn, LogOut, Plus, Link as LinkIcon, ChevronDown, Edit2, Trash2, X, GripVertical, Copy, Loader2, Globe, Check, User as UserIcon, Eye } from 'lucide-react';
 import { clsx } from 'clsx';
 import { AncTool } from '../Global Common/AncTool';
 import CreateTaskModal from '../components/CreateTaskModal';
@@ -13,10 +14,11 @@ import * as mammoth from 'mammoth';
 
 type Tab = 'info' | 'transcript' | 'actionItems' | 'tasks' | 'documents' | 'attendance';
 
-function AgendaItemCard({ item, index, meeting, onEdit, onDelete, currentUserRole, isDragging }: { item: AgendaItem, index: number, meeting: any, onEdit: (item: AgendaItem) => void, onDelete: (id: string) => void, currentUserRole: string, isDragging?: boolean }) {
+function AgendaItemCard({ item, index, meeting, onEdit, onDelete, currentUserRole, isDragging  }: { item: AgendaItem, index: number, meeting: any, onEdit: (item: AgendaItem) => void, onDelete: (id: string) => void, currentUserRole: string, isDragging?: boolean }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const owner = meeting.participants.find((p: any) => p.user.id === item.ownerId)?.user;
   const setActivePreviewFile = useStore(state => state.setActivePreviewFile);
+
 
   return (
     <div 
@@ -630,9 +632,9 @@ export default function MeetingProfile() {
     }
   };
 
-  const currentUserAttendance = meeting?.attendance?.[currentUser.id];
+  const currentUserAttendance = currentUser ? meeting?.attendance?.[currentUser.id] : undefined;
   const isCurrentlyJoined = currentUserAttendance?.sessions.some(s => !s.leaveTime);
-  const currentUserRole = meeting?.participants.find(p => p.user.id === currentUser.id)?.role || 'Observer';
+  const currentUserRole = currentUser ? meeting?.participants.find(p => p.user.id === currentUser.id)?.role || 'Observer' : 'Observer';
 
   const handleEditAgendaItem = (item: AgendaItem) => {
     setEditingAgendaItem(item);
@@ -654,7 +656,7 @@ export default function MeetingProfile() {
       
       // Notify participants
       meeting.participants.forEach(p => {
-        if (p.user.id !== currentUser.id) {
+        if (currentUser && p.user.id !== currentUser.id) {
           addNotification({
             userId: p.user.id,
             message: `An agenda item was deleted in meeting: ${meeting.title}`,
@@ -693,8 +695,8 @@ export default function MeetingProfile() {
       
       // Notify participants
       meeting.participants.forEach(p => {
-        if (p.user.id !== currentUser.id) {
-          addNotification({
+        if (currentUser && p.user.id !== currentUser.id) {
+            addNotification({
             userId: p.user.id,
             message: `An agenda item was ${itemExists ? 'updated' : 'added'} in meeting: ${meeting.title}`,
             type: 'Meeting',
@@ -795,7 +797,7 @@ export default function MeetingProfile() {
       await updateMeeting(meeting.id, { transcriptText: transcriptInput });
       // Notify participants
       meeting.participants.forEach(p => {
-        if (p.user.id !== currentUser.id) {
+        if (currentUser && p.user.id !== currentUser.id) {
           addNotification({
             userId: p.user.id,
             message: `Transcript updated for meeting: ${meeting.title}`,
@@ -856,7 +858,7 @@ export default function MeetingProfile() {
       setActiveTab('transcript');
       
       meeting.participants.forEach(p => {
-          if (p.user.id !== currentUser.id) {
+          if (currentUser && p.user.id !== currentUser.id) {
             addNotification({
               userId: p.user.id,
               message: `AI summary generated for meeting: ${meeting.title}`,
@@ -930,7 +932,7 @@ export default function MeetingProfile() {
       const generatedTaskId = taskId || `TASK-${Math.floor(Math.random() * 1000)}`;
       updateActionItem(id, { status: 'Task Created', omtTaskId: generatedTaskId });
       
-      if (item && item.assignedTo.id !== currentUser.id) {
+      if (item && currentUser && item.assignedTo.id !== currentUser.id) {
         addNotification({
           userId: item.assignedTo.id,
           message: `A new task was assigned to you: ${item.description}`,
@@ -1049,7 +1051,7 @@ export default function MeetingProfile() {
             </div>
             
             <div className="flex items-center gap-3">
-              {meeting.status !== 'Completed' && (
+              {meeting.status !== 'Completed' && currentUser && (
                 isCurrentlyJoined ? (
                   <button 
                     onClick={() => leaveMeeting(meeting.id, currentUser.id)}
@@ -1240,7 +1242,7 @@ export default function MeetingProfile() {
                           <div>
                             <p className="text-sm font-medium text-[var(--TextBlack)] flex items-center gap-2">
                               {p.user.name}
-                              {currentUserRole !== 'Organizer' || p.user.id === currentUser.id ? (
+                              {currentUser && (currentUserRole !== 'Organizer' || p.user.id === currentUser.id) ? (
                                 <span className={clsx(
                                   "text-[10px] px-1.5 py-0.5 rounded-full font-semibold uppercase tracking-wider",
                                   p.role === 'Organizer' ? "bg-indigo-50 text-indigo-700 border border-indigo-100" :
@@ -1255,7 +1257,7 @@ export default function MeetingProfile() {
                           </div>
                         </div>
                         
-                        {currentUserRole === 'Organizer' && p.user.id !== currentUser.id && (
+                        {currentUser && currentUserRole === 'Organizer' && p.user.id !== currentUser.id && (
                           <select
                             value={p.role}
                             onChange={(e) => {
@@ -1574,7 +1576,7 @@ export default function MeetingProfile() {
                         if (files.length > uploadedFiles.length) {
                           // Notify participants
                           meeting.participants.forEach(p => {
-                            if (p.user.id !== currentUser.id) {
+                            if (currentUser && p.user.id !== currentUser.id) {
                               addNotification({
                                 userId: p.user.id,
                                 message: `A new document was uploaded to meeting: ${meeting.title}`,
