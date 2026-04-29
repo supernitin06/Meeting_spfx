@@ -416,7 +416,7 @@ export default function MeetingModal() {
       }}
     >
       <div
-        className="modal-container rounded-lg"
+        className="modal-container meeting-modal rounded-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <PageLoader active={isSubmitting} isGeneratingLink={isGeneratingLink} />
@@ -449,10 +449,10 @@ export default function MeetingModal() {
                   Basic Information
                 </h3>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div className="meeting-grid meeting-grid-basic">
 
                   {/* Meeting Title */}
-                  <div className="space-y-2">
+                  <div className="space-y-2 meeting-field meeting-field-title">
                     <label className="block text-sm font-medium text-gray-700">
                       Meeting Title <span className="text-red-500">*</span>
                     </label>
@@ -467,7 +467,7 @@ export default function MeetingModal() {
                   </div>
 
                   {/* Meeting Type */}
-                  <div className="space-y-2">
+                  <div className="space-y-2 meeting-field">
                     <label className="block text-sm font-medium text-gray-700">
                       Meeting Type
                     </label>
@@ -492,7 +492,7 @@ export default function MeetingModal() {
                   </div>
 
                   {/* Visibility */}
-                  <div className="space-y-2">
+                  <div className="space-y-2 meeting-field">
                     <label className="block text-sm font-medium text-gray-700">
                       Visibility
                     </label>
@@ -514,7 +514,7 @@ export default function MeetingModal() {
                   </div>
 
                   {/* Linked Project */}
-                  <div className="space-y-2">
+                  <div className="space-y-2 meeting-field meeting-field-project">
                     <SearchInput
                       label="Linked Project"
                       value={project?.name || ''}
@@ -538,66 +538,66 @@ export default function MeetingModal() {
               <div className="space-y-4">
                 <h3 className="text-[var(--title)] font-semibold text-[var(--TextBlack)] border-b border-[var(--BorderGrey)] pb-2">Date & Time</h3>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-2">
+                <div className="meeting-grid meeting-grid-datetime">
+                  <div className="space-y-2 meeting-field">
                     <label className="block text-sm font-medium text-[var(--TextBlack)]">Start Date & Time</label>
-                    <div className="flex gap-2">
-                      <div className="relative flex-1" onClick={() => handleOpenPicker(startDateRef)}>
+                    <div className="meeting-datetime-group">
+                      <div className="relative flex-1 meeting-input-shell" onClick={() => handleOpenPicker(startDateRef)}>
                         <input
                           ref={startDateRef}
                           type="date"
                           value={startDate}
                           onChange={e => setStartDate(e.target.value)}
-                          className={`w-full pr-10 cursor-pointer ${!startDate ? 'text-[var(--DisabledGrey)]' : 'text-[var(--TextBlack)]'}`}
+                          className={`w-full pr-10 cursor-pointer meeting-datetime-input ${!startDate ? 'text-[var(--DisabledGrey)]' : 'text-[var(--TextBlack)]'}`}
                         />
                         <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--DisabledGrey)] pointer-events-none" size={16} />
                       </div>
-                      <div className="relative w-32" onClick={() => handleOpenPicker(startTimeRef)}>
+                      <div className="relative meeting-input-shell meeting-time-shell" onClick={() => handleOpenPicker(startTimeRef)}>
                         <input
                           ref={startTimeRef}
                           type="time"
                           value={startTime}
                           onChange={e => setStartTime(e.target.value)}
-                          className={`w-full pr-10 cursor-pointer ${!startTime ? 'text-[var(--DisabledGrey)]' : 'text-[var(--TextBlack)]'}`}
+                          className={`w-full pr-10 cursor-pointer meeting-datetime-input ${!startTime ? 'text-[var(--DisabledGrey)]' : 'text-[var(--TextBlack)]'}`}
                         />
                         <Clock className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--DisabledGrey)] pointer-events-none" size={16} />
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 meeting-field">
                     <label className="block text-sm font-medium text-[var(--TextBlack)]">End Date & Time</label>
-                    <div className="flex gap-2">
-                      <div className="relative flex-1" onClick={() => handleOpenPicker(endDateRef)}>
+                    <div className="meeting-datetime-group">
+                      <div className="relative flex-1 meeting-input-shell" onClick={() => handleOpenPicker(endDateRef)}>
                         <input
                           ref={endDateRef}
                           type="date"
                           value={endDate}
                           onChange={e => setEndDate(e.target.value)}
-                          className={`w-full pr-10 cursor-pointer ${!endDate ? 'text-[var(--DisabledGrey)]' : 'text-[var(--TextBlack)]'}`}
+                          className={`w-full pr-10 cursor-pointer meeting-datetime-input ${!endDate ? 'text-[var(--DisabledGrey)]' : 'text-[var(--TextBlack)]'}`}
                         />
                         <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--DisabledGrey)] pointer-events-none" size={16} />
                       </div>
-                      <div className="relative w-32" onClick={() => handleOpenPicker(endTimeRef)}>
+                      <div className="relative meeting-input-shell meeting-time-shell" onClick={() => handleOpenPicker(endTimeRef)}>
                         <input
                           ref={endTimeRef}
                           type="time"
                           value={endTime}
                           onChange={e => setEndTime(e.target.value)}
-                          className={`w-full pr-10 cursor-pointer ${!endTime ? 'text-[var(--DisabledGrey)]' : 'text-[var(--TextBlack)]'}`}
+                          className={`w-full pr-10 cursor-pointer meeting-datetime-input ${!endTime ? 'text-[var(--DisabledGrey)]' : 'text-[var(--TextBlack)]'}`}
                         />
                         <Clock className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--DisabledGrey)] pointer-events-none" size={16} />
                       </div>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-2 meeting-field">
                     <label className="block text-sm font-medium text-[var(--TextBlack)]">Time Zone</label>
-                    <div className="relative">
+                    <div className="relative meeting-input-shell">
                       <select
                         value={timeZone}
                         onChange={e => setTimeZone(e.target.value)}
-                        className="w-full pr-10 appearance-none"
+                        className="w-full pr-10 appearance-none meeting-select-input"
                       >
                         <option value="UTC">UTC</option>
                         <option value="America/New_York">Eastern Time (US & Canada)</option>
@@ -662,10 +662,10 @@ export default function MeetingModal() {
                           className="border border-[var(--BorderGrey)] rounded-lg p-4 bg-[var(--LightBgGrey)] space-y-4"
                         >
                           {/* ROW 1 */}
-                          <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_40px] gap-4">
+                          <div className="agenda-row agenda-row-top">
 
                             {/* Agenda Title */}
-                            <div className="min-w-0 w-full">
+                            <div className="min-w-0 w-full agenda-col agenda-col-title">
                               <label className="block text-sm font-medium mb-1">
                                 Agenda Title
                               </label>
@@ -681,7 +681,7 @@ export default function MeetingModal() {
                             </div>
 
                             {/* Related Documents */}
-                            <div className="min-w-0 w-full">
+                            <div className="min-w-0 w-full agenda-col agenda-col-docs">
                               <label className="block text-sm font-medium mb-1">
                                 Related Documents
                               </label>
@@ -754,7 +754,7 @@ export default function MeetingModal() {
                             </div>
 
                             {/* Task Link */}
-                            <div className="min-w-0 w-full">
+                            <div className="min-w-0 w-full agenda-col agenda-col-task">
                               <label className="block text-sm font-medium mb-1">
                                 Task Link
                               </label>
@@ -776,7 +776,7 @@ export default function MeetingModal() {
                             </div>
 
                             {/* Remove Button */}
-                            <div className="flex items-start justify-center pt-6">
+                            <div className="agenda-remove-wrap agenda-col agenda-col-remove">
                               <button
                                 type="button"
                                 onClick={() => {
@@ -799,10 +799,10 @@ export default function MeetingModal() {
                           </div>
 
                           {/* ROW 2 */}
-                          <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1fr_40px] gap-4">
+                          <div className="agenda-row agenda-row-bottom">
 
                             {/* Priority */}
-                            <div className="min-w-0 w-full">
+                            <div className="min-w-0 w-full agenda-col agenda-col-priority">
                               <label className="block text-sm font-medium mb-1">
                                 Priority
                               </label>
@@ -821,7 +821,7 @@ export default function MeetingModal() {
                             </div>
 
                             {/* Status */}
-                            <div className="min-w-0 w-full">
+                            <div className="min-w-0 w-full agenda-col agenda-col-status">
                               <label className="block text-sm font-medium mb-1">
                                 Status
                               </label>
@@ -840,7 +840,7 @@ export default function MeetingModal() {
                             </div>
 
                             {/* Owner */}
-                            <div className="min-w-0 w-full">
+                            <div className="min-w-0 w-full agenda-col agenda-col-owner">
                               <PeoplePicker
                                 multiple={false}
                                 onSelectionChange={(users) =>
@@ -855,7 +855,7 @@ export default function MeetingModal() {
                               />
                             </div>
 
-                            <div />
+                            <div className="agenda-row-spacer" />
                           </div>
 
                           {/* ACTIONS */}
@@ -887,13 +887,13 @@ export default function MeetingModal() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="space-y-2">
+                  <div className="meeting-grid meeting-grid-format">
+                    <div className="space-y-2 meeting-field">
                       <label className="block text-sm font-medium text-[var(--TextBlack)]">Meeting Type</label>
                       <select
                         value={category}
                         onChange={e => setCategory(e.target.value as MeetingCategory)}
-                        className="w-full"
+                        className="w-full meeting-select-input"
                       >
                         <option value="Online">Online</option>
                         <option value="Offline">Offline</option>
@@ -902,12 +902,12 @@ export default function MeetingModal() {
                     </div>
 
                     {(category === 'Online' || category === 'Hybrid') && (
-                      <div className="space-y-2">
+                      <div className="space-y-2 meeting-field">
                         <label className="block text-sm font-medium text-[var(--TextBlack)]">Platform</label>
                         <select
                           value={platform}
                           onChange={e => setPlatform(e.target.value as MeetingPlatform)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--SiteBlue)] text-sm"
+                          className="w-full meeting-select-input"
                         >
                           <option value="Microsoft Teams">Microsoft Teams</option>
                           <option value="Zoom">Zoom</option>
@@ -918,7 +918,7 @@ export default function MeetingModal() {
                     )}
 
                     {(category === 'Online' || category === 'Hybrid') && (
-                      <div className="space-y-2">
+                      <div className="space-y-2 meeting-field">
                         <div className="flex items-center justify-between">
                           <label className="block text-sm font-medium text-[var(--TextBlack)]">Meeting Link</label>
                           <button
@@ -946,12 +946,12 @@ export default function MeetingModal() {
                             )}
                           </button>
                         </div>
-                        <div className="relative">
+                        <div className="relative meeting-input-shell">
                           <input
                             type="text"
                             value={meetingLink}
                             onChange={e => setMeetingLink(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--SiteBlue)] pr-10 text-sm"
+                            className="w-full meeting-text-input pr-10"
                             placeholder={
                               platform === 'Microsoft Teams' ? 'https://teams.microsoft.com/...' :
                                 platform === 'Zoom' ? 'https://zoom.us/j/...' :
@@ -965,14 +965,14 @@ export default function MeetingModal() {
                     )}
 
                     {(category === 'Offline' || category === 'Hybrid') && (
-                      <div className="space-y-2">
+                      <div className="space-y-2 meeting-field">
                         <label className="block text-sm font-medium text-[var(--TextBlack)]">Location</label>
-                        <div className="relative">
+                        <div className="relative meeting-input-shell">
                           <input
                             type="text"
                             value={location}
                             onChange={e => setLocation(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--SiteBlue)] pr-10 text-sm"
+                            className="w-full meeting-text-input pr-10"
                             placeholder="e.g., Meeting Room 4B, Office Address"
                           />
                           <MapPin className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--DisabledGrey)] pointer-events-none" size={16} />

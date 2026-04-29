@@ -381,6 +381,168 @@ input:checked + .slider:before {
   flex-shrink: 0;
 }
 
+/* Meeting modal form layout */
+.meeting-modal {
+  max-width: 1280px;
+}
+
+.meeting-modal .meeting-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px 24px;
+}
+
+.meeting-modal .meeting-field {
+  min-width: 0;
+}
+
+.meeting-modal .meeting-field-title,
+.meeting-modal .meeting-field-project {
+  grid-column: span 1;
+}
+
+.meeting-modal .meeting-input-shell {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  background: #ffffff;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.meeting-modal .meeting-input-shell:focus-within {
+  border-color: var(--SiteBlue);
+  box-shadow: 0 0 0 3px rgba(47, 85, 150, 0.1);
+}
+
+.meeting-modal .meeting-datetime-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+.meeting-modal .meeting-time-shell {
+  min-width: 124px;
+}
+
+.meeting-modal input.meeting-datetime-input,
+.meeting-modal input.meeting-text-input,
+.meeting-modal select.meeting-select-input {
+  display: block !important;
+  width: 100% !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--TextBlack) !important;
+  padding: 0 12px !important;
+  line-height: 38px !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+}
+
+.meeting-modal input.meeting-datetime-input,
+.meeting-modal select.meeting-select-input {
+  padding-right: 36px !important;
+}
+
+.meeting-modal input.meeting-datetime-input,
+.meeting-modal input.meeting-text-input {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.meeting-modal select.meeting-select-input {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.meeting-modal input.meeting-datetime-input:focus,
+.meeting-modal input.meeting-text-input:focus,
+.meeting-modal select.meeting-select-input:focus {
+  outline: none !important;
+}
+
+.meeting-modal input.meeting-datetime-input::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+.meeting-modal .agenda-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px 16px;
+}
+
+.meeting-modal .agenda-col {
+  min-width: 0;
+}
+
+.meeting-modal .agenda-remove-wrap {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.meeting-modal .agenda-row-spacer {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .meeting-modal .meeting-grid-basic,
+  .meeting-modal .meeting-grid-datetime,
+  .meeting-modal .meeting-grid-format {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .meeting-modal .meeting-field-title,
+  .meeting-modal .meeting-field-project {
+    grid-column: span 2;
+  }
+
+  .meeting-modal .meeting-datetime-group {
+    grid-template-columns: minmax(0, 1fr) 132px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .meeting-modal .meeting-grid-basic,
+  .meeting-modal .meeting-grid-datetime,
+  .meeting-modal .meeting-grid-format {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .meeting-modal .meeting-field-title {
+    grid-column: span 2;
+  }
+
+  .meeting-modal .meeting-field-project {
+    grid-column: span 1;
+  }
+
+  .meeting-modal .agenda-row-top {
+    grid-template-columns: minmax(220px, 1.1fr) minmax(280px, 1.5fr) minmax(180px, 1fr) 40px;
+    align-items: start;
+  }
+
+  .meeting-modal .agenda-row-bottom {
+    grid-template-columns: minmax(160px, 1fr) minmax(160px, 1fr) minmax(220px, 1.2fr) 40px;
+    align-items: end;
+  }
+
+  .meeting-modal .agenda-col-title { grid-column: 1 / 2; }
+  .meeting-modal .agenda-col-docs { grid-column: 2 / 3; }
+  .meeting-modal .agenda-col-task { grid-column: 3 / 4; }
+  .meeting-modal .agenda-col-remove { grid-column: 4 / 5; }
+  .meeting-modal .agenda-col-priority { grid-column: 1 / 2; }
+  .meeting-modal .agenda-col-status { grid-column: 2 / 3; }
+  .meeting-modal .agenda-col-owner { grid-column: 3 / 4; }
+  .meeting-modal .agenda-row-spacer { display: block; }
+  .meeting-modal .agenda-remove-wrap { justify-content: center; padding-top: 24px; }
+}
+
 /* Avatar */
 .avatar-img {
   width: 28px;

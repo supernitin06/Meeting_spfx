@@ -63,7 +63,7 @@ const tailwindBuildTask = build.subTask(
 );
 
 /* Run Tailwind BEFORE SPFx build */
-// build.rig.addPreBuildTask(tailwindBuildTask);
+build.rig.addPreBuildTask(tailwindBuildTask);
 
 /* =========================
    Suppress SPFx warnings
