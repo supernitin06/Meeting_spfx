@@ -1,9 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import { useState, useMemo } from 'react';
 import { useStore } from '../store/useStore';
 import { format, isToday, isAfter, isBefore, startOfWeek, addDays, isSameDay, startOfMonth, endOfMonth, endOfWeek, isSameMonth, addMonths, subMonths, differenceInMinutes, subDays, startOfDay, endOfDay, eachHourOfInterval } from 'date-fns';
 import { Link } from 'react-router-dom';
-import { Search, FileText, LayoutGrid, List, CalendarDays, Calendar, Clock, MapPin, ListChecks, X } from 'lucide-react';
+import { FileText, LayoutGrid, List, CalendarDays, Clock, X, MapPinIcon, ListChecksIcon, SearchIcon } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Meeting } from '../types';
 import { SmartTable } from '../GlobalCommonTable/Table/SmartTable';
@@ -545,7 +545,7 @@ console.log("meetings data : ", meetings);
           <div className="space-y-3 mb-6">
             <div className="flex items-center justify-between text-[var(--DisabledGrey)]">
               <div className="flex items-center gap-1.5">
-                <Calendar size={14} />
+                <CalendarDays size={14} />
                 <span className="text-[11px] font-medium">{format(new Date(meeting.startDateTime), 'MMM d, yyyy')}</span>
               </div>
               <div className="flex items-center gap-1.5">
@@ -556,12 +556,12 @@ console.log("meetings data : ", meetings);
             
             <div className="flex items-center justify-between text-[var(--DisabledGrey)]">
               <div className="flex items-center gap-1.5">
-                <MapPin size={14} />
+                <MapPinIcon size={14} />
                 <span className="text-[11px] font-medium truncate max-w-[100px]">{meeting.location || meeting.type}</span>
               </div>
               {meeting.agendaItems && meeting.agendaItems.length > 0 && (
                 <div className="flex items-center gap-1.5">
-                  <ListChecks size={14} />
+                  <ListChecksIcon size={14} />
                   <span className="text-[11px] font-medium">{meeting.agendaItems.length} Items</span>
                 </div>
               )}
@@ -611,7 +611,7 @@ console.log("meetings data : ", meetings);
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pr-9 pl-4 py-[9px] bg-[#FAFAFA] border border-[#CCCCCC] rounded-[4px] text-sm outline-none transition-all duration-200 focus:border-[var(--SiteBlue)] focus:bg-white focus:ring-2 focus:ring-[var(--SiteBlue)]/10"
                 />
-                <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--DisabledGrey)] pointer-events-none" size={16} />
+                <SearchIcon className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--DisabledGrey)] pointer-events-none" size={16} />
               </div>
               <button
                 onClick={() => openMeetingModal()}

@@ -2,5 +2,42 @@
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/spfx-serve.schema.json",
   "port": 4321,
   "https": true,
-  "initialPage": "https://smalsusinfolabs.sharepoint.com/sites/SPTrainees/Nitin/_layouts/15/workbench.aspx"
+
+  "serveConfigurations": {
+    "default": {
+      "pageUrl": "https://smalsusinfolabs.sharepoint.com/sites/SPTrainees/Nitin/_layouts/15/workbench.aspx",
+      "customActions": {
+        "efa1f8f4-d7b5-4d98-94f6-099d2403ff8e": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Test message"
+          }
+        }
+      }
+    },
+
+    "helloextension": {
+      "pageUrl": "https://smalsusinfolabs.sharepoint.com/sites/SPTrainees/Nitin/_layouts/15/workbench.aspx",
+      "customActions": {
+        "efa1f8f4-d7b5-4d98-94f6-099d2403ff8e": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Hello from Extension"
+          }
+        }
+      }
+    },
+
+    "full-app": {
+      "pageUrl": "https://smalsusinfolabs.sharepoint.com/sites/SPTrainees/Nitin/_layouts/15/workbench.aspx",
+      "customActions": {
+        "efa1f8f4-d7b5-4d98-94f6-099d2403ff8e": {
+          "location": "ClientSideExtension.ApplicationCustomizer",
+          "properties": {
+            "testMessage": "Running Full App"
+          }
+        }
+      }
+    }
+  }
 }

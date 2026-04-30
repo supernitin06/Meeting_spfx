@@ -1,0 +1,63 @@
+# Understanding SPFx Flow: Web Parts & Extensions
+
+This guide explains how your project is structured, how the code flows to the UI, and how to run everything correctly.
+
+## 1. The Flow: Web Part vs. Extension
+
+### A. Web Part Flow (The "Main" UI)
+*   **Location**: `src/webparts/helloworld`
+*   **Entry Point**: `HelloworldWebPart.ts`
+*   **How it works**: 
+    1.  The `render()` method in `HelloworldWebPart.ts` is triggered by SharePoint.
+    2.  It uses `React.createElement` to create your React component (`Helloworld.tsx`).
+    3.  The component is injected into the DOM element SharePoint provides on the page.
+*   **Visual**: Think of this as a "Widget" you can drag and drop onto any page.
+
+### B. Extension Flow (The "Global" UI)
+*   **Location**: `src/extensions/helloextension`
+*   **Entry Point**: `HelloextensionApplicationCustomizer.ts`
+*   **How it works**:
+    1.  `onInit()` runs automatically when the page loads.
+    2.  It uses `this.context.placeholderProvider` to find "Slots" in the SharePoint UI (like the Header or Footer).
+    3.  In your code, it targets `PlaceholderName.Top` (the Header).
+    4.  It renders your `Navbar.tsx` component into that top slot.
+*   **Visual**: Think of this as a "Plugin" that adds a header or footer to every single page in the site.
+
+---
+
+## 2. How to Run and See the UI
+
+### Step 1: Start the Local Server
+Ensure your terminal is running:
+```bash
+gulp serve
+```
+*Wait until you see "Finished subtask 'reload'" or "Finished subtask 'serve'" in the terminal.*
+
+### Step 2: View the Web Part (Workbench)
+1.  Go to your Hosted Workbench URL:
+    [https://smalsusinfolabs.sharepoint.com/sites/SPTrainees/Nitin/_layouts/15/workbench.aspx](https://smalsusinfolabs.sharepoint.com/sites/SPTrainees/Nitin/_layouts/15/workbench.aspx)
+2.  Click the **(+)** icon on the page.
+3.  Search for **"Helloworld"**.
+4.  Add it to the page. You should see your UI now.
+
+### Step 3: View the Extension (Debug URL)
+Extensions **do not** show up in the Workbench automatically. You must use a special URL to "debug" them on a real page.
+
+1.  Open any SharePoint site page (e.g., your Home page).
+2.  Append these query parameters to the URL (replace `<ID>` with your extension ID):
+    `?loadSPFX=true&debugManifestsFile=https://localhost:4321/temp/manifests.js&customActions={"<EXTENSION_ID>":{"location":"ClientSideExtension.ApplicationCustomizer","properties":{"testMessage":"Hello"}}}`
+
+> [!TIP]
+> Usually, `gulp serve` is configured to open this automatically or you can find the link in `config/serve.json`.
+
+---
+
+## 3. Why is it not showing?
+
+If you don't see anything:
+1.  **Check Terminal Errors**: Look at your `gulp serve` terminal. If there are red lines (errors), the code hasn't compiled.
+2.  **Check Browser Console (F12)**: 
+    *   If you see "Load Debug Scripts?", click **"Load debug scripts"**.
+    *   Look for errors in the "Console" tab.
+3.  **Trust Localhost**: Open [https://localhost:4321](https://localhost:4321) in a new tab. If you see a privacy warning, click **Advanced -> Proceed** to trust the certificate.

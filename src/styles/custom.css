@@ -53,8 +53,7 @@ div[data-automation-id="CanvasZone"] {
 #spSiteHeader,
 #spCommandBar,
 .CanvasZone--header,
-.sp-appBar,
-div#spTopPlaceholder {
+.sp-appBar {
   display: none !important;
 }
  

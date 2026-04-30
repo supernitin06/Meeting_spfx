@@ -19,7 +19,7 @@
     "resolveJsonModule": true,
 
     "outDir": "lib",
-    "rootDir": ".",
+    "rootDir": "src",
 
     "noImplicitAny": false,
     "strict": false,
@@ -33,4 +33,3 @@
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
-fnevb bfrvi k rifvi. frvj j

@@ -38,13 +38,12 @@ export default class HelloworldWebPart extends BaseClientSideWebPart<IHelloworld
     ReactDom.render(element, this.domElement);
   }
 
-  protected onInit(): Promise<void> {
-    super.onInit();
+  protected async onInit(): Promise<void> {
+    await super.onInit();
     getSP(this.context);
     
-    return this._getEnvironmentMessage().then(message => {
-      this._environmentMessage = message;
-    });
+    const message = await this._getEnvironmentMessage();
+    this._environmentMessage = message;
   }
 
 

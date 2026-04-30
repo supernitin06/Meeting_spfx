@@ -5,14 +5,23 @@
     "helloworld-web-part": {
       "components": [
         {
-          "entrypoint": "./lib/src/webparts/helloworld/HelloworldWebPart.js",
+          "entrypoint": "./lib/webparts/helloworld/HelloworldWebPart.js",
           "manifest": "./src/webparts/helloworld/HelloworldWebPart.manifest.json"
+        }
+      ]
+    },
+    "helloextension-application-customizer": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/helloextension/HelloextensionApplicationCustomizer.js",
+          "manifest": "./src/extensions/helloextension/HelloextensionApplicationCustomizer.manifest.json"
         }
       ]
     }
   },
   "externals": {},
   "localizedResources": {
-    "HelloworldWebPartStrings": "lib/webparts/helloworld/loc/{locale}.js"
+    "HelloworldWebPartStrings": "lib/webparts/helloworld/loc/{locale}.js",
+    "HelloExtensionApplicationCustomizerStrings": "lib/extensions/helloextension/loc/{locale}.js"
   }
 }

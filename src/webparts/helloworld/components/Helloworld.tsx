@@ -8,8 +8,8 @@ import MeetingProfile from '../../../pages/MeetingProfile';
 import Layout from '../../../components/Layout';
 import { useStore } from '../../../store/useStore';
 import { GroupService } from '../../../services/GroupService';
-import '../../../../styles/custom.css';
-import '../../../../styles/tailwind.generated.css';
+import '../../../styles/custom.css';
+import '../../../styles/tailwind.generated.css';
 
 function AppRoutes() {
   const setUsers = useStore((state) => state.setUsers);
@@ -21,7 +21,7 @@ function AppRoutes() {
   const setGroupedUsers = useStore((state) => state.setGroupedUsers);
   const fetchMeetings = useStore((state) => state.fetchMeetings);
   React.useEffect(() => {
-    (async () => {
+    const bootstrap = async () => {
       try {
         // Load real users/groups from SharePoint (Users + Groups lists)
         const groups = await GroupService.getGroupsAndUsers();
@@ -59,7 +59,11 @@ function AppRoutes() {
       } catch (e) {
         console.error("Bootstrap load failed:", e);
       }
-    })();
+    };
+    
+    bootstrap().catch(err => {
+      console.error("Bootstrap execution failed:", err);
+    });
   }, [fetchMeetings, setActionItems, setCurrentUser, setGroupedUsers, setNotifications, setProjects, setTeams, setUsers]);
 
   return (
@@ -76,7 +80,7 @@ function AppRoutes() {
   );
 }
 
-export default class Helloworld extends React.Component<IHelloworldProps, {}> {
+export default class Helloworld extends React.Component<IHelloworldProps, Record<string, never>> {
   public render(): React.ReactElement<IHelloworldProps> {
     return (
       <HashRouter>
