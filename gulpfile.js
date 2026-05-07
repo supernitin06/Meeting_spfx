@@ -16,7 +16,7 @@ build.lintCmd && (build.lintCmd.enabled = false);
 build.configureWebpack.mergeConfig({
   additionalConfiguration: (config) => {
 
-    config.resolve = config.resolve || {};
+    config.resolve = config.resolve || {}; 
     config.resolve.alias = config.resolve.alias || {};
 
     config.resolve.alias['lucide-react$'] =

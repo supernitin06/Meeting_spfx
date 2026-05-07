@@ -28,7 +28,7 @@ export default function Overview() {
     { id: 'participants', key: 'participants', label: 'Participants', visible: true, width: 150, order: 5 },
   ];
 
-console.log("meetings data : ", meetings);
+console.log("meetings data  rrrr: ", meetings);
 
   const [tableSettings, setTableSettings] = useState<TableSettings>({
     showHeader: true,
@@ -600,7 +600,7 @@ console.log("meetings data : ", meetings);
           {/* Header */}
           <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <h1 className="text-[var(--mainTitle)] font-bold text-[var(--SiteBlue)]">Meeting Overview</h1>
+              <h1 className="text-[var(--mainTitle)] font-bold text-[var(--SiteBlue)]">Meetings Overview</h1>
             </div>
             <div className="flex items-center gap-4">
               <div className="relative w-64">
